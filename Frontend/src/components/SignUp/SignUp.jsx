@@ -79,7 +79,7 @@ function SignUp() {
 
                         <p className="pt-4 text-sm text-center">
                             Already have an account?{" "}
-                            <span className="font-semibold text-blue-700 cursor-pointer" onClick={()=>navigate('/')}>Login</span>
+                            <span className="font-semibold text-blue-700 cursor-pointer" onClick={()=>navigate('/login')}>Login</span>
                         </p>
                     </div>
                 </div>
