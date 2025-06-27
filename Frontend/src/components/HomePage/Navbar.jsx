@@ -1,37 +1,70 @@
-// src/components/Navbar.jsx
-import { FaShoppingCart, FaUserAlt, FaSearch, FaGift } from 'react-icons/fa'
-import { MdLocationOn } from 'react-icons/md'
-import { BsFillCalendarHeartFill } from 'react-icons/bs'
+import { useState } from 'react';
+import { FaShoppingCart, FaUserAlt, FaSearch, FaGift, FaBars } from 'react-icons/fa';
+import { MdLocationOn } from 'react-icons/md';
 
 export default function Navbar() {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
   return (
-    <nav className="w-full bg-white shadow px-6 py-4 flex items-center justify-between">
-      <div className="flex items-center space-x-4">
-        <FaGift className="text-green-700 text-2xl" />
-        <h1 className="text-xl font-bold text-green-700">Uphaar</h1>
-        <div className="flex items-center text-sm text-red-500">
-          <MdLocationOn className="text-lg" />
-          <span>Location missing</span>
+    <nav className="w-full bg-white shadow px-4 sm:px-6 py-4">
+      <div className="flex items-center justify-between">
+        {/* Logo & Location */}
+        <div className="flex items-center space-x-3">
+          <FaGift className="text-green-700 text-2xl" />
+          <h1 className="text-xl font-bold text-green-700">Uphaar</h1>
+          <div className="hidden sm:flex items-center text-sm text-red-500">
+            <MdLocationOn className="text-lg" />
+            <span>Location missing</span>
+          </div>
+        </div>
+
+        {/* Mobile Menu Button */}
+        <div className="sm:hidden">
+          <FaBars className="text-xl cursor-pointer" onClick={() => setIsMenuOpen(!isMenuOpen)} />
+        </div>
+
+        {/* Search Bar (hidden on small screens) */}
+        <div className="hidden lg:flex items-center bg-gray-100 px-3 py-2 rounded-md w-1/3">
+          <FaSearch className="text-gray-600 mr-2" />
+          <input
+            type="text"
+            placeholder="Search Gifts, Cakes, Flowers..."
+            className="bg-transparent outline-none w-full text-sm"
+          />
+        </div>
+
+        {/* Action Icons */}
+        <div className="hidden sm:flex items-center space-x-5 text-gray-700 text-sm">
+          <span className="hidden md:inline">₹ INR</span>
+          <FaShoppingCart className="cursor-pointer text-xl" />
+          <FaUserAlt className="cursor-pointer text-xl" />
+          <span className="cursor-pointer hidden md:inline">More</span>
         </div>
       </div>
 
-      {/* Search Bar */}
-      <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md w-1/3">
-        <FaSearch className="text-gray-600 mr-2" />
-        <input
-          type="text"
-          placeholder="Search Gifts, Cakes, Flowers..."
-          className="bg-transparent outline-none w-full"
-        />
-      </div>
-
-      {/* Action Icons */}
-      <div className="flex items-center space-x-6 text-gray-700">
-        <span>₹ INR</span>
-        <FaShoppingCart className="cursor-pointer text-xl" />
-        <FaUserAlt className="cursor-pointer text-xl" />
-        <span className="cursor-pointer">More</span>
-      </div>
+      {/* Mobile Dropdown (optional) */}
+      {isMenuOpen && (
+        <div className="sm:hidden mt-4 space-y-3 text-sm text-gray-700">
+          <div className="flex items-center space-x-2">
+            <MdLocationOn className="text-red-500" />
+            <span>Location missing</span>
+          </div>
+          <div className="flex items-center bg-gray-100 px-3 py-2 rounded-md">
+            <FaSearch className="text-gray-600 mr-2" />
+            <input
+              type="text"
+              placeholder="Search Gifts, Cakes, Flowers..."
+              className="bg-transparent outline-none w-full text-sm"
+            />
+          </div>
+          <div className="flex justify-between items-center pt-2">
+            <span>₹ INR</span>
+            <FaShoppingCart className="text-lg" />
+            <FaUserAlt className="text-lg" />
+            <span>More</span>
+          </div>
+        </div>
+      )}
     </nav>
-  )
+  );
 }
