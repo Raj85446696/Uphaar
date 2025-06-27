@@ -27,9 +27,7 @@ export default function Navbar() {
 
       {/* Action Icons */}
       <div className="flex items-center space-x-6 text-gray-700">
-        <button className="hover:text-green-600">Same Day</button>
         <span>₹ INR</span>
-        <button className="hover:text-green-600">Corporate</button>
         <FaShoppingCart className="cursor-pointer text-xl" />
         <FaUserAlt className="cursor-pointer text-xl" />
         <span className="cursor-pointer">More</span>
