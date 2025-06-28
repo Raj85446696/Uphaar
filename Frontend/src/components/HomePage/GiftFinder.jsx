@@ -1,5 +1,6 @@
 import React, { useState } from "react";
-
+import { useNavigate } from 'react-router-dom';
+import data from '../../cards.json';
 const GiftFinderSection = () => {
   const [form, setForm] = useState({
     occasion: "",
@@ -25,56 +26,42 @@ const GiftFinderSection = () => {
     }
   };
 
-  const cardData = [
-    {
-      title: "Birthday Special",
-      img: "https://plus.unsplash.com/premium_photo-1663839412026-51a44cfadfb8?fm=jpg&q=60&w=3000",
-    },
-    {
-      title: "Love & Romance",
-      img: "https://ascension.co.in/wp-content/uploads/2025/01/VL01_VL011_VL021_CVL08_CP77_Card3_2KK_1-1.jpg",
-    },
-    {
-      title: "Festive Picks",
-      img: "https://images.livemint.com/img/2023/12/18/original/iStock-1218816574_1702905519412.jpg",
-    },
-    {
-      title: "Corporate Gifts",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIY0vEHN4Tv7pFYOD6ffT2aBQBkzYEVFveXQ&s",
-    },
-    {
-      title: "Party Gifts",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIY0vEHN4Tv7pFYOD6ffT2aBQBkzYEVFveXQ&s",
-    },
-    {
-      title: "Girls Gifts",
-      img: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSIY0vEHN4Tv7pFYOD6ffT2aBQBkzYEVFveXQ&s",
-    },
-    {
-      title: "Birthday Special",
-      img: "https://plus.unsplash.com/premium_photo-1663839412026-51a44cfadfb8?fm=jpg&q=60&w=3000",
-    },
-    {
-      title: "Birthday Special",
-      img: "https://plus.unsplash.com/premium_photo-1663839412026-51a44cfadfb8?fm=jpg&q=60&w=3000",
-    },
-  ];
+  const cardData = data;
+  const navigate = useNavigate();
+  const uniqueCards = [];
+  const seenCategories = new Set();
+
+  for (const card of cardData) {
+    if (!seenCategories.has(card.category)) {
+      seenCategories.add(card.category);
+      uniqueCards.push(card);
+    }
+    if (uniqueCards.length === 8) break;
+  }
 
   return (
+
     <div className="flex flex-col lg:flex-row justify-between px-4 py-6 bg-gray-50 min-h-screen gap-6">
-      
+
       {/* Cards Section */}
       <div className="w-full lg:w-3/4">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
-          {cardData.map((card, index) => (
+          {uniqueCards.map((card, index) => (
             <div
               key={index}
-              className="bg-gradient-to-br from-white to-gray-100 rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition duration-300 overflow-hidden h-60"
+              onClick={() => navigate(`/products/${card.category}`)}
+              className="cursor-pointer bg-gradient-to-br from-white to-gray-100 rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition duration-300 overflow-hidden h-60"
             >
-              <img src={card.img} alt={card.title} className="w-full h-28 object-cover" />
+              <img
+                src={card.img}
+                alt={card.category}
+                className="w-full h-28 object-cover"
+              />
               <div className="p-3">
-                <h3 className="text-sm font-semibold text-gray-800 mb-1">{card.title}</h3>
-                <p className="text-xs text-gray-500 hover:text-blue-600 cursor-pointer transition">
+                <h3 className="text-sm font-semibold text-gray-800 mb-1">
+                  {card.category}
+                </h3>
+                <p className="text-xs text-gray-500 hover:text-blue-600 transition">
                   Explore now →
                 </p>
               </div>

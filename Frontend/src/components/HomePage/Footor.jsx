@@ -15,7 +15,7 @@ const Footor = () => {
             items: ["About Us", "Team", "Careers", "Testimonials", "News Room", "Blog"],
           },
           {
-            title: "FNP Business",
+            title: "UPHAAR Business",
             items: ["Decoration", "Services", "Corporate Service", "Affiliate Program", "Retail Stores", "Franchise"],
           },
           {
