@@ -53,7 +53,7 @@ const GiftFinderSection = () => {
               className="cursor-pointer bg-gradient-to-br from-white to-gray-100 rounded-xl shadow hover:shadow-lg hover:scale-[1.02] transition duration-300 overflow-hidden h-60"
             >
               <img
-                src={card.img}
+                src={card.image}
                 alt={card.category}
                 className="w-full h-28 object-cover"
               />
