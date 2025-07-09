@@ -1,10 +1,20 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
 import cardsData from '../../cards.json';
+import { useCart } from '../Cards/CartContext';
+import { useNavigate } from 'react-router-dom';
 
 const ProductDetailCard = () => {
-  const { id ,category} = useParams();
+  const { id, category } = useParams();
   const product = cardsData.find(item => item.id.toString() === id && item.category.toLowerCase() === category.toLowerCase());
+  const navigate = useNavigate();
+  const { addToCart } = useCart();
+
+  const handleAddToCart = () => {
+    addToCart(product);
+    navigate('/cart');
+  };
+
 
   if (!product) {
     return <div className="text-center mt-10 text-red-600">Product not found</div>;
@@ -75,7 +85,7 @@ const ProductDetailCard = () => {
 
           {/* Buttons */}
           <div className="flex space-x-4 pt-4">
-            <button className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white py-2 px-4 rounded-xl text-sm font-semibold shadow-lg hover:scale-105 transition-transform">
+            <button className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white py-2 px-4 rounded-xl text-sm font-semibold shadow-lg hover:scale-105 transition-transform" onClick={handleAddToCart}>
               🛒 Add to Cart
             </button>
             <button className="bg-green-600 hover:bg-green-700 text-white py-2 px-6 rounded-xl shadow font-semibold hover:scale-105 transition-transform">
