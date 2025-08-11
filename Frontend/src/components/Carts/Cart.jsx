@@ -8,6 +8,38 @@ const Cart = () => {
   const { cartItems } = useCart();
   const navigate = useNavigate();
 
+  const handleBuyNow = async () => {
+    try {
+      // 1. Create order from backend
+      const res = await fetch("http://localhost:8000/create-order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+      });
+      const order = await res.json();
+
+      // 2. Open Razorpay checkout
+      const options = {
+        key: "rzp_test_REtdhsrLtQMD5l", // From Razorpay Dashboard
+        amount: order.amount,
+        currency: order.currency,
+        name: "Your Store Name",
+        description: "Test Transaction",
+        order_id: order.id,
+        handler: function (response) {
+          alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
+        },
+        theme: {
+          color: "#4CAF50",
+        },
+      };
+
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error("Payment failed", error);
+    }
+  };
+
   if (cartItems.length === 0) {
     return (
       <>
@@ -91,7 +123,7 @@ const Cart = () => {
 
             {/* Buy Now Button */}
             <div className="mt-6 text-right">
-              <button className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl shadow font-semibold text-sm transition-transform hover:scale-105">
+              <button onClick={handleBuyNow} className="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-xl shadow font-semibold text-sm transition-transform hover:scale-105">
                 🛍️ Buy Now
               </button>
             </div>
