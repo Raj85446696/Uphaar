@@ -1,25 +1,53 @@
-import { useEffect, useState } from 'react';
-import { FaShoppingCart, FaUserAlt, FaSearch, FaGift, FaBars } from 'react-icons/fa';
-import { MdLocationOn } from 'react-icons/md';
-import { useNavigate, useLocation } from 'react-router-dom';
+import { useEffect, useState } from "react";
+import {
+  FaShoppingCart,
+  FaUserAlt,
+  FaSearch,
+  FaGift,
+  FaBars,
+} from "react-icons/fa";
+import { MdLocationOn } from "react-icons/md";
+import { useNavigate, useLocation } from "react-router-dom";
 
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
-  const [open, setOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const navigate = useNavigate();
-  const routerLocation = useLocation();
+  const location = useLocation();
 
-  const isCartPage = routerLocation.pathname === '/cart';
+  const isCartPage = location.pathname === "/cart";
 
+  // Fetch user location once
   useEffect(() => {
-    fetch('https://ipwho.is/')
+    fetch("https://ipwho.is/")
       .then((res) => res.json())
-      .then((data) => {
-        setUserLocation(data);
-      })
+      .then((data) => setUserLocation(data))
       .catch((err) => console.error(err));
   }, []);
+
+  // Check login status whenever location changes or storage updates
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    setIsLoggedIn(!!token);
+  }, [location]);
+
+  // Optional: Listen to localStorage changes from other tabs/windows
+  useEffect(() => {
+    const handleStorageChange = () => {
+      setIsLoggedIn(!!localStorage.getItem("token"));
+    };
+    window.addEventListener("storage", handleStorageChange);
+    return () => {
+      window.removeEventListener("storage", handleStorageChange);
+    };
+  }, []);
+
+  const handleSignOut = () => {
+    localStorage.removeItem("token");
+    setIsLoggedIn(false);
+    navigate("/login");
+  };
 
   return (
     <nav className="w-full bg-white shadow px-4 sm:px-6 py-4">
@@ -34,7 +62,7 @@ export default function Navbar() {
           </div>
         </div>
 
-        {/* Hide everything else if on /cart */}
+        {/* Hide rest if on cart page */}
         {!isCartPage && (
           <>
             {/* Mobile Menu Button */}
@@ -45,7 +73,7 @@ export default function Navbar() {
               />
             </div>
 
-            {/* Search Bar (hidden on small screens) */}
+            {/* Search Bar */}
             <div className="hidden lg:flex items-center bg-gray-100 px-3 py-2 rounded-md w-1/3">
               <FaSearch className="text-gray-600 mr-2" />
               <input
@@ -55,60 +83,30 @@ export default function Navbar() {
               />
             </div>
 
-            {/* Action Icons */}
+            {/* Desktop Icons */}
             <div className="hidden sm:flex items-center space-x-5 text-gray-700 text-sm">
               <span className="hidden md:inline">₹ INR</span>
               <FaShoppingCart
                 className="cursor-pointer text-xl"
-                onClick={() => navigate('/cart')}
+                onClick={() => navigate("/cart")}
               />
-
-              {/* Icon Button */}
-              <div
-                className="relative inline-block text-left"
-                tabIndex={0} 
-                onBlur={() => setOpen(false)} 
-              >
-                {/* Icon */}
-                <FaUserAlt
-                  className="cursor-pointer text-xl"
-                  onClick={() => setOpen(!open)}
-                />
-
-                {/* Dropdown */}
-                {open && (
-                  <div className="absolute right-0 mt-2 w-48 rounded-md bg-black shadow-lg ring-1 ring-black ring-opacity-5">
-                    <div className="py-1">
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
-                      >
-                        Account settings
-                      </a>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
-                      >
-                        Support
-                      </a>
-                      <a
-                        href="#"
-                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
-                      >
-                        License
-                      </a>
-                      <button
-                        onClick={() => alert("Signed out")}
-                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700"
-                      >
-                        Sign out
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-
+              {isLoggedIn ? (
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-2 text-sm text-red-500"
+                >
+                  <FaUserAlt className="text-xl" />
+                  Sign out
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="flex items-center gap-2 text-sm text-blue-500"
+                >
+                  <FaUserAlt className="text-xl" />
+                  Login
+                </button>
+              )}
             </div>
           </>
         )}
@@ -134,10 +132,25 @@ export default function Navbar() {
             <div className="flex items-center gap-4">
               <FaShoppingCart
                 className="text-lg cursor-pointer"
-                onClick={() => navigate('/cart')}
+                onClick={() => navigate("/cart")}
               />
-              <FaUserAlt className="text-lg" />
-              <span className="cursor-pointer">More</span>
+              {isLoggedIn ? (
+                <button
+                  onClick={handleSignOut}
+                  className="flex items-center gap-1 text-red-500"
+                >
+                  <FaUserAlt className="text-lg" />
+                  Sign out
+                </button>
+              ) : (
+                <button
+                  onClick={() => navigate("/login")}
+                  className="flex items-center gap-1 text-blue-500"
+                >
+                  <FaUserAlt className="text-lg" />
+                  Login
+                </button>
+              )}
             </div>
           </div>
         </div>
