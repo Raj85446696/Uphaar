@@ -6,6 +6,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 export default function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [userLocation, setUserLocation] = useState(null);
+  const [open, setOpen] = useState(false);
   const navigate = useNavigate();
   const routerLocation = useLocation();
 
@@ -61,8 +62,53 @@ export default function Navbar() {
                 className="cursor-pointer text-xl"
                 onClick={() => navigate('/cart')}
               />
-              <FaUserAlt className="cursor-pointer text-xl" />
-              <span className="cursor-pointer hidden md:inline">More</span>
+
+              {/* Icon Button */}
+              <div
+                className="relative inline-block text-left"
+                tabIndex={0} 
+                onBlur={() => setOpen(false)} 
+              >
+                {/* Icon */}
+                <FaUserAlt
+                  className="cursor-pointer text-xl"
+                  onClick={() => setOpen(!open)}
+                />
+
+                {/* Dropdown */}
+                {open && (
+                  <div className="absolute right-0 mt-2 w-48 rounded-md bg-black shadow-lg ring-1 ring-black ring-opacity-5">
+                    <div className="py-1">
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      >
+                        Account settings
+                      </a>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      >
+                        Support
+                      </a>
+                      <a
+                        href="#"
+                        className="block px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      >
+                        License
+                      </a>
+                      <button
+                        onClick={() => alert("Signed out")}
+                        className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-gray-700"
+                      >
+                        Sign out
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
+
+
             </div>
           </>
         )}
