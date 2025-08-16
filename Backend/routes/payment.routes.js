@@ -4,8 +4,14 @@ const razorpay = require("../config/razorpay");
 
 router.post("/create-order", async (req, res) => {
   try {
+    const { amount } = req.body; 
+
+    if (!amount || amount <= 0) {
+      return res.status(400).json({ error: "Invalid amount" });
+    }
+
     const options = {
-      amount: 50000, // Amount in paise (₹500.00)
+      amount, // already in paise
       currency: "INR",
       receipt: `order_rcptid_${Date.now()}`,
     };
@@ -17,5 +23,6 @@ router.post("/create-order", async (req, res) => {
     res.status(500).send("Error creating order");
   }
 });
+
 
 module.exports = router;

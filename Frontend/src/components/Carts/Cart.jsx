@@ -10,27 +10,32 @@ const Cart = () => {
 
   const handleBuyNow = async () => {
     try {
-      // 1. Create order from backend
-      const res = await fetch("http://localhost:8000/create-order", {
+      // calculate total amount (in paise)
+      const totalAmount = Math.round(
+        cartItems.reduce((total, item) => total + item.price, 0) * 1.18 * 100
+      );
+
+      // 1. Create order from backend with total amount
+      const res = await fetch("http://localhost:8000/api/payment/create-order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ amount: totalAmount }), // send amount
       });
+
       const order = await res.json();
 
       // 2. Open Razorpay checkout
       const options = {
-        key: "rzp_test_REtdhsrLtQMD5l", // From Razorpay Dashboard
+        key: "rzp_test_REtdhsrLtQMD5l",
         amount: order.amount,
         currency: order.currency,
-        name: "Your Store Name",
+        name: "UPHAAR",
         description: "Test Transaction",
         order_id: order.id,
         handler: function (response) {
           alert(`Payment Successful! Payment ID: ${response.razorpay_payment_id}`);
         },
-        theme: {
-          color: "#4CAF50",
-        },
+        theme: { color: "#4CAF50" },
       };
 
       const rzp1 = new window.Razorpay(options);
@@ -39,6 +44,7 @@ const Cart = () => {
       console.error("Payment failed", error);
     }
   };
+
 
   if (cartItems.length === 0) {
     return (
